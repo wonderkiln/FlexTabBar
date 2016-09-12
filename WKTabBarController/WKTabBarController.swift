@@ -36,8 +36,6 @@ public class WKTabBarImageCell: UICollectionViewCell {
         imageView = UIImageView()
         contentView.addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
-//        imageView.widthAnchor.constraintEqualToConstant(16).active = true
-//        imageView.heightAnchor.constraintEqualToConstant(16).active = true
         imageView.centerXAnchor.constraintEqualToAnchor(contentView.centerXAnchor).active = true
         imageView.centerYAnchor.constraintEqualToAnchor(contentView.centerYAnchor).active = true
     }
@@ -53,22 +51,19 @@ public class WKTabBarImageLabelCell: WKTabBarImageCell {
         view.backgroundColor = UIColor.clearColor()
         
         imageView = UIImageView()
-//        imageView.backgroundColor = UIColor.grayColor()
         view.addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
-//        imageView.widthAnchor.constraintEqualToConstant(16).active = true
-//        imageView.heightAnchor.constraintEqualToConstant(16).active = true
         imageView.leadingAnchor.constraintEqualToAnchor(view.leadingAnchor).active = true
         imageView.centerYAnchor.constraintEqualToAnchor(view.centerYAnchor).active = true
-//        imageView.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor).active = true
         
         label = UILabel()
         label.text = "Label"
+        label.font = UIFont.systemFontOfSize(15)
         view.addSubview(label)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.leadingAnchor.constraintEqualToAnchor(imageView.trailingAnchor, constant: 8).active = true
+        label.leadingAnchor.constraintEqualToAnchor(imageView.trailingAnchor, constant: 10).active = true
         label.trailingAnchor.constraintEqualToAnchor(view.trailingAnchor).active = true
-        label.topAnchor.constraintEqualToAnchor(view.topAnchor).active = true
+        label.topAnchor.constraintEqualToAnchor(view.topAnchor, constant: 2).active = true
         label.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor).active = true
         
         contentView.addSubview(view)
@@ -199,6 +194,8 @@ public class WKTabBarController: UIViewController, WKTabBarControllerProtocol, U
 //        indicatorView.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor, constant: indicatorSize.height / 2.0).active = true
 //        l = indicatorView.leadingAnchor.constraintEqualToAnchor(view.leadingAnchor)
 //        l.active = true
+        
+        selectedIndex = 0
     }
     
     // MARK: WKTabBarControllerProtocol

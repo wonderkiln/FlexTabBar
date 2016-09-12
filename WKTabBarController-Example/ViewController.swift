@@ -9,6 +9,16 @@
 import UIKit
 import WKTabBarController
 
+public func IS_LANDSCAPE() -> Bool {
+    return UIDevice.currentDevice().orientation.isLandscape
+}
+public func IS_IPAD() -> Bool {
+    return UIDevice.currentDevice().userInterfaceIdiom == .Pad
+}
+public func IS_IPHONE() -> Bool {
+    return UIDevice.currentDevice().userInterfaceIdiom == .Phone
+}
+
 class ViewController: WKTabBarController {
 
     override func viewDidLoad() {
@@ -22,51 +32,51 @@ class ViewController: WKTabBarController {
     }
     
     override func tabBarController(controller: WKTabBarController, imageAtIndex index: Int) -> UIImage? {
-        if index == 2 && UIDevice.currentDevice().userInterfaceIdiom == .Phone { return UIImage(named: "tab_bar_circle") }
-        
-        if index == 0 { return UIImage(named: "ic_activity") }
-        else if index == 1 { return UIImage(named: "ic_home") }
-        else if index == 2 { return UIImage(named: "ic_home") }
-        else if index == 3 { return UIImage(named: "ic_profile") }
-        else { return UIImage(named: "ic_review") }
-    }
-    
-    override func tabBarController(controller: WKTabBarController, customizeCell cell: WKTabBarImageCell, atIndex index: Int) {
-        if index == 2 {
-            if UIDevice.currentDevice().userInterfaceIdiom == .Phone {
-                cell.imageView.transform = CGAffineTransformMakeTranslation(0, -15)
-                cell.backgroundColor = UIColor.clearColor()
-            } else {
-                cell.backgroundColor = UIColor.redColor()
-            }
+        if IS_IPAD() && IS_LANDSCAPE() {
+            if index == 0 { return UIImage(named: "ic_home") }
+            else if index == 1 { return UIImage(named: "ic_activity") }
+            else if index == 2 { return UIImage(named: "ic_review") }
+            else if index == 3 { return UIImage(named: "ic_profile") }
+            else { return UIImage(named: "ic_home") }
         } else {
-            cell.imageView.transform = CGAffineTransformIdentity
-            cell.backgroundColor = UIColor.clearColor()
-        }
-        
-        if let cell = cell as? WKTabBarImageLabelCell {
-            cell.label.font = UIFont.systemFontOfSize(14)
-            cell.label.textColor = UIColor(white: 0.2, alpha: 1.0)
-            if index == 2 && UIDevice.currentDevice().userInterfaceIdiom != .Phone {
-                cell.label.textColor = UIColor.whiteColor()
-            }
+            if index == 0 { return UIImage(named: "ic_home") }
+            else if index == 1 { return UIImage(named: "ic_activity") }
+            else if index == 2 { return UIImage(named: "tab_bar_circle") }
+            else if index == 3 { return UIImage(named: "ic_review") }
+            else { return UIImage(named: "ic_profile") }
         }
     }
     
     override func tabBarController(controller: WKTabBarController, titleAtIndex index: Int) -> String? {
-        if index == 2 && UIDevice.currentDevice().userInterfaceIdiom == .Phone { return nil }
-        if UIDevice.currentDevice().orientation.isPortrait { return nil }
-        
-        if index == 0 { return "Home" }
-        else if index == 1 { return "Activity" }
-        else if index == 2 { return "Add Procedure" }
-        else if index == 3 { return "Property" }
-        else { return "Settings" }
+        if IS_IPAD() && IS_LANDSCAPE() {
+            if index == 0 { return "Home" }
+            else if index == 1 { return "Activity" }
+            else if index == 2 { return "Review" }
+            else if index == 3 { return "Profile" }
+            else { return "Add Procedure" }
+        }
+        return nil
+    }
+    
+    override func tabBarController(controller: WKTabBarController, customizeCell cell: WKTabBarImageCell, atIndex index: Int) {
+        if IS_IPAD() && IS_LANDSCAPE() {
+            if index == 4 {
+                (cell as? WKTabBarImageLabelCell)?.label.textColor = UIColor.whiteColor()
+                cell.backgroundColor = UIColor(red:68.0/255.0, green:132.0/255.0, blue:166.0/255.0, alpha:255.0/255.0)
+            } else {
+                (cell as? WKTabBarImageLabelCell)?.label.textColor = UIColor(white: 0.2, alpha: 1.0)
+                cell.backgroundColor = UIColor.clearColor()
+            }
+        } else {
+            if index == 2 {
+                cell.imageView.transform = CGAffineTransformMakeTranslation(0, -15)
+            } else {
+                cell.imageView.transform = CGAffineTransformIdentity
+            }
+        }
     }
     
     override func tabBarController(controller: WKTabBarController, viewControllerAtIndex index: Int) -> UIViewController? {
-        if index == 2 { return nil }
-        
         let vc = UIViewController()
         vc.view.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
         
