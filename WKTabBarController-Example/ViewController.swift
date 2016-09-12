@@ -37,13 +37,29 @@ class ViewController: WKTabBarController {
             else if index == 1 { return UIImage(named: "ic_activity") }
             else if index == 2 { return UIImage(named: "ic_review") }
             else if index == 3 { return UIImage(named: "ic_profile") }
-            else { return UIImage(named: "ic_home") }
+            else { return UIImage(named: "ic_add") }
         } else {
             if index == 0 { return UIImage(named: "ic_home") }
             else if index == 1 { return UIImage(named: "ic_activity") }
             else if index == 2 { return UIImage(named: "tab_bar_circle") }
             else if index == 3 { return UIImage(named: "ic_review") }
             else { return UIImage(named: "ic_profile") }
+        }
+    }
+    
+    override func tabBarController(controller: WKTabBarController, selectedImageAtIndex index: Int) -> UIImage? {
+        if IS_IPAD() && IS_LANDSCAPE() {
+            if index == 0 { return UIImage(named: "ic_home_sel") }
+            else if index == 1 { return UIImage(named: "ic_activity_sel") }
+            else if index == 2 { return UIImage(named: "ic_review_sel") }
+            else if index == 3 { return UIImage(named: "ic_profile_sel") }
+            else { return UIImage(named: "ic_add") }
+        } else {
+            if index == 0 { return UIImage(named: "ic_home_sel") }
+            else if index == 1 { return UIImage(named: "ic_activity_sel") }
+            else if index == 2 { return UIImage(named: "tab_bar_circle") }
+            else if index == 3 { return UIImage(named: "ic_review_sel") }
+            else { return UIImage(named: "ic_profile_sel") }
         }
     }
     

@@ -13,12 +13,15 @@ public protocol WKTabBarControllerProtocol {
     func tabBarControllerNumberOfItems(controller: WKTabBarController) -> Int
     func tabBarController(controller: WKTabBarController, titleAtIndex index: Int) -> String?
     func tabBarController(controller: WKTabBarController, imageAtIndex index: Int) -> UIImage?
+    func tabBarController(controller: WKTabBarController, selectedImageAtIndex index: Int) -> UIImage?
     func tabBarController(controller: WKTabBarController, customizeCell cell: WKTabBarImageCell, atIndex index: Int)
     func tabBarController(controller: WKTabBarController, viewControllerAtIndex index: Int) -> UIViewController?
     
 }
 
 public class WKTabBarImageCell: UICollectionViewCell {
+    
+    public var tabBar: WKTabBarController!
     
     public var imageView: UIImageView!
     
@@ -38,6 +41,26 @@ public class WKTabBarImageCell: UICollectionViewCell {
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.centerXAnchor.constraintEqualToAnchor(contentView.centerXAnchor).active = true
         imageView.centerYAnchor.constraintEqualToAnchor(contentView.centerYAnchor).active = true
+    }
+    
+    public override var highlighted: Bool {
+        didSet {
+            if highlighted {
+                alpha = 0.5
+            } else {
+                alpha = 1.0
+            }
+        }
+    }
+    
+    public override var selected: Bool {
+        didSet {
+            if selected {
+                imageView.image = tabBar.tabBarController(tabBar, selectedImageAtIndex: 0)
+            } else {
+                imageView.image = tabBar.tabBarController(tabBar, imageAtIndex: 0)
+            }
+        }
     }
     
 }
@@ -121,8 +144,6 @@ public class WKTabBarController: UIViewController, WKTabBarControllerProtocol, U
         viewController = vc
     }
     
-    var l: NSLayoutConstraint!
-    
     var selectedIndex: Int = 0 {
         didSet {
             if let vc = tabBarController(self, viewControllerAtIndex: selectedIndex) {
@@ -189,11 +210,6 @@ public class WKTabBarController: UIViewController, WKTabBarControllerProtocol, U
         
         view.addSubview(indicatorView)
         indicatorView.translatesAutoresizingMaskIntoConstraints = true
-//        indicatorView.widthAnchor.constraintEqualToConstant(indicatorSize.width).active = true
-//        indicatorView.heightAnchor.constraintEqualToConstant(indicatorSize.height).active = true
-//        indicatorView.bottomAnchor.constraintEqualToAnchor(view.bottomAnchor, constant: indicatorSize.height / 2.0).active = true
-//        l = indicatorView.leadingAnchor.constraintEqualToAnchor(view.leadingAnchor)
-//        l.active = true
         
         selectedIndex = 0
     }
@@ -222,6 +238,7 @@ public class WKTabBarController: UIViewController, WKTabBarControllerProtocol, U
             cell = textCell
         }
         
+        cell.tabBar = self
         tabBarController(self, customizeCell: cell, atIndex: indexPath.row)
         
         return cell
@@ -233,7 +250,13 @@ public class WKTabBarController: UIViewController, WKTabBarControllerProtocol, U
     }
     
     public func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath) {
-        collectionView.deselectItemAtIndexPath(indexPath, animated: true)
+//        collectionView.deselectItemAtIndexPath(indexPath, animated: true)
+        
+//        if let cell = collectionView.cellForItemAtIndexPath(indexPath) as? WKTabBarImageCell {
+//            cell.imageView.image = tabBarController(self, selectedImageAtIndex: indexPath.row)
+//            cell.imageView.setNeedsDisplay()
+//        }
+        
         selectedIndex = indexPath.row
     }
     
@@ -250,6 +273,10 @@ public class WKTabBarController: UIViewController, WKTabBarControllerProtocol, U
     }
     
     public func tabBarController(controller: WKTabBarController, titleAtIndex index: Int) -> String? {
+        return nil
+    }
+    
+    public func tabBarController(controller: WKTabBarController, selectedImageAtIndex index: Int) -> UIImage? {
         return nil
     }
     
