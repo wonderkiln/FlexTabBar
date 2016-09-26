@@ -10,13 +10,13 @@ import UIKit
 import WKTabBarController
 
 public func IS_LANDSCAPE() -> Bool {
-    return UIDevice.currentDevice().orientation.isLandscape
+    return UIDevice.current.orientation.isLandscape
 }
 public func IS_IPAD() -> Bool {
-    return UIDevice.currentDevice().userInterfaceIdiom == .Pad
+    return UIDevice.current.userInterfaceIdiom == .pad
 }
 public func IS_IPHONE() -> Bool {
-    return UIDevice.currentDevice().userInterfaceIdiom == .Phone
+    return UIDevice.current.userInterfaceIdiom == .phone
 }
 
 class ViewController: WKTabBarController {
@@ -27,11 +27,11 @@ class ViewController: WKTabBarController {
         tabBarBackgroundImage = UIImage(named: "tab_bar_bg")
     }
     
-    override func tabBarControllerNumberOfItems(controller: WKTabBarController) -> Int {
+    override func tabBarControllerNumberOfItems(_ controller: WKTabBarController) -> Int {
         return 5
     }
     
-    override func tabBarController(controller: WKTabBarController, imageAtIndex index: Int) -> UIImage? {
+    override func tabBarController(_ controller: WKTabBarController, imageAtIndex index: Int) -> UIImage? {
         if IS_IPAD() && IS_LANDSCAPE() {
             if index == 0 { return UIImage(named: "ic_home") }
             else if index == 1 { return UIImage(named: "ic_activity") }
@@ -47,7 +47,7 @@ class ViewController: WKTabBarController {
         }
     }
     
-    override func tabBarController(controller: WKTabBarController, selectedImageAtIndex index: Int) -> UIImage? {
+    override func tabBarController(_ controller: WKTabBarController, selectedImageAtIndex index: Int) -> UIImage? {
         if IS_IPAD() && IS_LANDSCAPE() {
             if index == 0 { return UIImage(named: "ic_home_sel") }
             else if index == 1 { return UIImage(named: "ic_activity_sel") }
@@ -63,7 +63,7 @@ class ViewController: WKTabBarController {
         }
     }
     
-    override func tabBarController(controller: WKTabBarController, titleAtIndex index: Int) -> String? {
+    override func tabBarController(_ controller: WKTabBarController, titleAtIndex index: Int) -> String? {
         if IS_IPAD() && IS_LANDSCAPE() {
             if index == 0 { return "Home" }
             else if index == 1 { return "Activity" }
@@ -74,37 +74,37 @@ class ViewController: WKTabBarController {
         return nil
     }
     
-    override func tabBarController(controller: WKTabBarController, customizeCell cell: WKTabBarImageCell, atIndex index: Int) {
+    override func tabBarController(_ controller: WKTabBarController, customizeCell cell: WKTabBarImageCell, atIndex index: Int) {
         if IS_IPAD() && IS_LANDSCAPE() {
             if index == 4 {
-                (cell as? WKTabBarImageLabelCell)?.label.textColor = UIColor.whiteColor()
+                (cell as? WKTabBarImageLabelCell)?.label.textColor = UIColor.white
                 cell.backgroundColor = UIColor(red:68.0/255.0, green:132.0/255.0, blue:166.0/255.0, alpha:255.0/255.0)
             } else {
                 (cell as? WKTabBarImageLabelCell)?.label.textColor = UIColor(white: 0.2, alpha: 1.0)
-                cell.backgroundColor = UIColor.clearColor()
+                cell.backgroundColor = UIColor.clear
             }
         } else {
             if index == 2 {
-                cell.imageView.transform = CGAffineTransformMakeTranslation(0, -15)
+                cell.imageView.transform = CGAffineTransform(translationX: 0, y: -15)
             } else {
-                cell.imageView.transform = CGAffineTransformIdentity
+                cell.imageView.transform = CGAffineTransform.identity
             }
         }
     }
     
-    override func tabBarController(controller: WKTabBarController, viewControllerAtIndex index: Int) -> UIViewController? {
+    override func tabBarController(_ controller: WKTabBarController, viewControllerAtIndex index: Int) -> UIViewController? {
         let vc = UIViewController()
         vc.view.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
         
         let label = UILabel()
-        label.font = UIFont.systemFontOfSize(48)
+        label.font = UIFont.systemFont(ofSize: 48)
         label.textColor = UIColor(white: 0.8, alpha: 1.0)
         label.text = "\(index + 1)"
         
         vc.view.addSubview(label)
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.centerXAnchor.constraintEqualToAnchor(vc.view.centerXAnchor).active = true
-        label.centerYAnchor.constraintEqualToAnchor(vc.view.centerYAnchor).active = true
+        label.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor).isActive = true
+        label.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor).isActive = true
         
         return vc
     }
