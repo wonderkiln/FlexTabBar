@@ -134,7 +134,12 @@ open class WKTabBarImageLabelCell: WKTabBarImageCell {
 
 open class WKTabBarController: UIViewController, WKTabBarControllerProtocol, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
-    open var tabBarBackgroundImage: UIImage? {
+    var selectedIndex: Int = 0
+    var container: UIView!
+    var collectionView: UICollectionView!
+    weak var viewController: UIViewController?
+    
+    public var tabBarBackgroundImage: UIImage? {
         didSet {
             if let image = tabBarBackgroundImage {
                 collectionView?.backgroundView = UIImageView(image: image)
@@ -142,28 +147,13 @@ open class WKTabBarController: UIViewController, WKTabBarControllerProtocol, UIC
         }
     }
     
-    open var collectionView: UICollectionView!
-    open var indicatorView: UIView!
-    
-    weak var viewController: UIViewController?
-    
-    func changeViewController(_ vc: UIViewController) {
-        viewController?.view.removeFromSuperview()
-        viewController?.removeFromParentViewController()
-        
-        container.addSubview(vc.view)
-        vc.view.frame = container.bounds
-        addChildViewController(vc)
-        vc.didMove(toParentViewController: self)
-        
-        viewController = vc
-    }
-    
     public var tabBarItems: [WKTabBarItem] = [] {
         didSet {
             collectionView?.reloadData()
         }
     }
+
+    public var tabBarHeight: CGFloat = 48.0
     
     public init() {
         super.init(nibName: nil, bundle: nil)
@@ -179,8 +169,6 @@ open class WKTabBarController: UIViewController, WKTabBarControllerProtocol, UIC
         commonInit()
     }
     
-    var container: UIView!
-    
     func commonInit() {
         container = UIView()
         container.backgroundColor = UIColor.clear
@@ -189,7 +177,7 @@ open class WKTabBarController: UIViewController, WKTabBarControllerProtocol, UIC
         container.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         container.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         container.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
-        container.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: 48).isActive = true
+        container.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -tabBarHeight).isActive = true
         
         let layout = UICollectionViewFlowLayout()
         layout.minimumInteritemSpacing = 0
@@ -215,7 +203,7 @@ open class WKTabBarController: UIViewController, WKTabBarControllerProtocol, UIC
         collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        collectionView.heightAnchor.constraint(equalToConstant: 48).isActive = true
+        collectionView.heightAnchor.constraint(equalToConstant: tabBarHeight).isActive = true
         
         NotificationCenter.default.addObserver(
             self,
@@ -225,7 +213,6 @@ open class WKTabBarController: UIViewController, WKTabBarControllerProtocol, UIC
     }
     
     // MARK: WKTabBarControllerProtocol
-    
     open func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return tabBarItems.count
     }
@@ -263,7 +250,18 @@ open class WKTabBarController: UIViewController, WKTabBarControllerProtocol, UIC
         }
     }
     
-    var selectedIndex: Int = 0
+    // MARK: - Private Methods
+    func changeViewController(_ vc: UIViewController) {
+        viewController?.view.removeFromSuperview()
+        viewController?.removeFromParentViewController()
+        
+        container.addSubview(vc.view)
+        vc.view.frame = container.bounds
+        addChildViewController(vc)
+        vc.didMove(toParentViewController: self)
+        
+        viewController = vc
+    }
     
     public func setSelectedIndex2(_ index: Int) {
         let indexPath = IndexPath(index: selectedIndex)
@@ -278,7 +276,6 @@ open class WKTabBarController: UIViewController, WKTabBarControllerProtocol, UIC
     }
     
     // MARK: WKTabBarControllerProtocol
-    
     open func tabBarController(_ controller: WKTabBarController, shouldShowTitleAt index: Int) -> Bool {
         return false
     }
