@@ -25,18 +25,29 @@ class ViewController: WKTabBarController {
         super.viewDidLoad()
         
         tabBarBackgroundImage = #imageLiteral(resourceName: "tab_bar_bg")
-        tabBarItems = [
-            WKTabBarItem(title: "Home", image: #imageLiteral(resourceName: "ic_home"), selected: #imageLiteral(resourceName: "ic_home_sel")),
-            WKTabBarItem(title: "Activity", image: #imageLiteral(resourceName: "ic_activity"),    selected: #imageLiteral(resourceName: "ic_activity_sel")),
-            WKTabBarItem(title: "Add Procedure", image: #imageLiteral(resourceName: "tab_bar_circle"), highlighted: #imageLiteral(resourceName: "tab_bar_circle_hover")),
-            WKTabBarItem(title: "Review", image: #imageLiteral(resourceName: "ic_review"), selected: #imageLiteral(resourceName: "ic_review_sel")),
-            WKTabBarItem(title: "Profile", image: #imageLiteral(resourceName: "ic_profile"), selected: #imageLiteral(resourceName: "ic_profile_sel"))
-        ]
+        if IS_IPAD() {
+            tabBarItems = [
+                WKTabBarItem(title: "Home", image: #imageLiteral(resourceName: "ic_home"), selected: #imageLiteral(resourceName: "ic_home_sel")),
+                WKTabBarItem(title: "Activity", image: #imageLiteral(resourceName: "ic_activity"), selected: #imageLiteral(resourceName: "ic_activity_sel")),
+                WKTabBarItem(title: "Review", image: #imageLiteral(resourceName: "ic_review"), selected: #imageLiteral(resourceName: "ic_review_sel")),
+                WKTabBarItem(title: "Profile", image: #imageLiteral(resourceName: "ic_profile"), selected: #imageLiteral(resourceName: "ic_profile_sel")),
+                WKTabBarItem(title: "Add Procedure", image: #imageLiteral(resourceName: "ic_add"))
+            ]
+            tabBarItems[4].proportion = 1.5
+        } else {
+            tabBarItems = [
+                WKTabBarItem(title: "Home", image: #imageLiteral(resourceName: "ic_home"), selected: #imageLiteral(resourceName: "ic_home_sel")),
+                WKTabBarItem(title: "Activity", image: #imageLiteral(resourceName: "ic_activity"), selected: #imageLiteral(resourceName: "ic_activity_sel")),
+                WKTabBarItem(title: "Add Procedure", image: #imageLiteral(resourceName: "tab_bar_circle"), highlighted: #imageLiteral(resourceName: "tab_bar_circle_hover")),
+                WKTabBarItem(title: "Review", image: #imageLiteral(resourceName: "ic_review"), selected: #imageLiteral(resourceName: "ic_review_sel")),
+                WKTabBarItem(title: "Profile", image: #imageLiteral(resourceName: "ic_profile"), selected: #imageLiteral(resourceName: "ic_profile_sel"))
+            ]
+        }
     }
     
     override func tabBarController(_ controller: WKTabBarController, customizeCell cell: WKTabBarImageCell, at index: Int) {
-        if IS_IPAD() && IS_LANDSCAPE() {
-            if index == 4 {
+        if IS_IPAD() {
+            if cell.model?.title == "Add Procedure" {
                 (cell as? WKTabBarImageLabelCell)?.label.textColor = UIColor.white
                 cell.backgroundColor = UIColor(red:68.0/255.0, green:132.0/255.0, blue:166.0/255.0, alpha:255.0/255.0)
             } else {
@@ -44,7 +55,7 @@ class ViewController: WKTabBarController {
                 cell.backgroundColor = UIColor.clear
             }
         } else {
-            if index == 2 {
+            if cell.model?.title == "Add Procedure" {
                 cell.imageView.transform = CGAffineTransform(translationX: 0, y: -10)
             } else {
                 cell.imageView.transform = CGAffineTransform.identity
@@ -52,9 +63,11 @@ class ViewController: WKTabBarController {
         }
     }
     
+    override func tabBarController(_ controller: WKTabBarController, shouldShowTitleAt index: Int) -> Bool {
+        return (tabBarItems[index].title == "Add Procedure" && IS_IPAD()) || (IS_IPAD() && IS_LANDSCAPE())
+    }
+    
     override func tabBarController(_ controller: WKTabBarController, viewControllerAtIndex index: Int) -> UIViewController? {
-        if index == 2 { return nil }
-        
         let vc = UIViewController()
         vc.view.backgroundColor = UIColor(white: 0.95, alpha: 1.0)
         
@@ -67,6 +80,11 @@ class ViewController: WKTabBarController {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor).isActive = true
         label.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor).isActive = true
+        
+        if tabBarItems[index].title == "Add Procedure" && !IS_IPAD() {
+            // present(vc, animated: true, completion: nil)
+            return nil
+        }
         
         return vc
     }

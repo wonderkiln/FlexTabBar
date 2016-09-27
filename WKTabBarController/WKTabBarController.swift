@@ -15,6 +15,7 @@ public class WKTabBarItem {
     public var image: UIImage
     public var highlightedImage: UIImage?
     public var selectedImage: UIImage?
+    public var proportion: Double = 1.0
     
     public init(image: UIImage, highlighted: UIImage? = nil, selected: UIImage? = nil) {
         self.image = image
@@ -31,21 +32,6 @@ public class WKTabBarItem {
     
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 public protocol WKTabBarControllerProtocol {
     func tabBarController(_ controller: WKTabBarController, shouldShowTitleAt index: Int) -> Bool
     func tabBarController(_ controller: WKTabBarController, viewControllerAtIndex index: Int) -> UIViewController?
@@ -54,7 +40,7 @@ public protocol WKTabBarControllerProtocol {
 
 open class WKTabBarImageCell: UICollectionViewCell {
     
-    var model: WKTabBarItem? {
+    open var model: WKTabBarItem? {
         didSet {
             imageView.image = isSelected ? (model?.selectedImage ?? model?.image) : model?.image
         }
@@ -146,13 +132,6 @@ open class WKTabBarImageLabelCell: WKTabBarImageCell {
     
 }
 
-
-
-public enum IndicatorViewType {
-    case line(CGFloat) // height
-    case dot(CGFloat)  // width = height
-}
-
 open class WKTabBarController: UIViewController, WKTabBarControllerProtocol, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
     open var tabBarBackgroundImage: UIImage? {
@@ -160,20 +139,6 @@ open class WKTabBarController: UIViewController, WKTabBarControllerProtocol, UIC
             if let image = tabBarBackgroundImage {
                 collectionView?.backgroundView = UIImageView(image: image)
             }
-        }
-    }
-    
-    var indicatorType: IndicatorViewType = .dot(6.0)
-    open var indicatorColor: UIColor = UIColor(red:68.0/255.0, green:132.0/255.0, blue:166.0/255.0, alpha:255.0/255.0)
-    
-    var indicatorSize: CGSize {
-        switch indicatorType {
-        case .line(let height):
-            let count = tabBarItems.count
-            let width = collectionView.frame.width / CGFloat(count)
-            return CGSize(width: width, height: height)
-        case .dot(let size):
-            return CGSize(width: size, height: size)
         }
     }
     
@@ -198,27 +163,6 @@ open class WKTabBarController: UIViewController, WKTabBarControllerProtocol, UIC
         didSet {
             collectionView?.reloadData()
         }
-    }
-    
-    var selectedIndex: Int = 0 {
-        didSet {
-            if let vc = tabBarController(self, viewControllerAtIndex: selectedIndex) {
-                updateIndicatorViewAtIndex(selectedIndex)
-                changeViewController(vc)
-            }
-        }
-    }
-    
-    func updateIndicatorViewAtIndex(_ index: Int) {
-        guard let cell = collectionView.cellForItem(at: IndexPath(row: index, section: 0)) else {
-            return
-        }
-        
-        let origin = CGPoint(x: cell.frame.midX - indicatorSize.width / 2.0, y: view.bounds.height - indicatorSize.height / 2.0)
-        UIView.animate(withDuration: 0.5, animations: {
-            self.indicatorView.frame = CGRect(origin: origin, size: self.indicatorSize)
-            self.indicatorView.layoutIfNeeded()
-        }) 
     }
     
     public init() {
@@ -273,17 +217,11 @@ open class WKTabBarController: UIViewController, WKTabBarControllerProtocol, UIC
         collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         collectionView.heightAnchor.constraint(equalToConstant: 48).isActive = true
         
-        
-        
-        indicatorView = UIView()
-//        indicatorView.backgroundColor = indicatorColor
-//        indicatorView.layer.cornerRadius = indicatorSize.height / 2.0
-//        indicatorView.clipsToBounds = true
-//        
-//        view.addSubview(indicatorView)
-//        indicatorView.translatesAutoresizingMaskIntoConstraints = true
-        
-        selectedIndex = 0
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(didChangeOrientation(_:)),
+            name: NSNotification.Name.UIApplicationDidChangeStatusBarOrientation,
+            object: nil)
     }
     
     // MARK: WKTabBarControllerProtocol
@@ -313,27 +251,31 @@ open class WKTabBarController: UIViewController, WKTabBarControllerProtocol, UIC
     }
     
     open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let count = self.collectionView(collectionView, numberOfItemsInSection: (indexPath as NSIndexPath).section)
-        return CGSize(width: collectionView.bounds.width / CGFloat(count), height: collectionView.bounds.height)
+        let proportion = tabBarItems[indexPath.row].proportion
+        let sum = tabBarItems.reduce(0.0) { $0.0 + $0.1.proportion }
+        return CGSize(width: collectionView.bounds.width * CGFloat(proportion / sum), height: collectionView.bounds.height)
     }
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if let vc = tabBarController(self, viewControllerAtIndex: indexPath.row) {
+            selectedIndex = indexPath.row
             changeViewController(vc)
         }
     }
     
-//    open func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        if let vc = tabBarController(self, viewControllerAtIndex: indexPath.row) {
-//            changeViewController(vc)
-//        }
-//    }
+    var selectedIndex: Int = 0
     
-//    open override func viewDidLayoutSubviews() {
-//        super.viewDidLayoutSubviews()
-//        collectionView.reloadData()
-//        updateIndicatorViewAtIndex(selectedIndex)
-//    }
+    public func setSelectedIndex2(_ index: Int) {
+        let indexPath = IndexPath(index: selectedIndex)
+        collectionView.selectItem(at: indexPath,
+                                  animated: false,
+                                  scrollPosition: .centeredHorizontally)
+    }
+    
+    func didChangeOrientation(_ notification: Notification) {
+        collectionView.reloadData()
+        setSelectedIndex2(selectedIndex)
+    }
     
     // MARK: WKTabBarControllerProtocol
     
