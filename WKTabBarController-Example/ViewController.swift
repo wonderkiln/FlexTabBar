@@ -42,24 +42,25 @@ class ViewController: WKTabBarController {
                 WKTabBarItem(title: "Review", image: #imageLiteral(resourceName: "ic_item"), selected: #imageLiteral(resourceName: "ic_item_sel")),
                 WKTabBarItem(title: "Profile", image: #imageLiteral(resourceName: "ic_item"), selected: #imageLiteral(resourceName: "ic_item_sel")),
             ]
+            tabBarItems[2].proportion = 1.5
         }
     }
     
-    override func tabBarController(_ controller: WKTabBarController, customizeCell cell: WKTabBarImageCell, at index: Int) {
+    override func tabBarController(_ controller: WKTabBarController, customizeCell cell: WKBaseTabBarCell, at index: Int) {
         if IS_IPAD() {
-            (cell as? WKTabBarImageLabelCell)?.label.font = UIFont.systemFont(ofSize: 16)
+            cell.textLabel?.font = UIFont.systemFont(ofSize: 16)
             if cell.model?.title == "Add Procedure" {
-                (cell as? WKTabBarImageLabelCell)?.label.textColor = UIColor.white
+                cell.textLabel?.textColor = UIColor.white
                 cell.backgroundColor = UIColor(red:0.25, green:0.60, blue:0.75, alpha:1.00)
             } else {
-                (cell as? WKTabBarImageLabelCell)?.label.textColor = UIColor(red:0.63, green:0.68, blue:0.77, alpha:1.00)
+                cell.textLabel?.textColor = UIColor(red:0.63, green:0.68, blue:0.77, alpha:1.00)
                 cell.backgroundColor = UIColor.clear
             }
         } else {
             if cell.model?.title == "Add Procedure" {
-                cell.imageView.transform = CGAffineTransform(translationX: 0, y: -10)
+                cell.imageView?.transform = CGAffineTransform(translationX: 0, y: -10)
             } else {
-                cell.imageView.transform = CGAffineTransform.identity
+                cell.imageView?.transform = CGAffineTransform.identity
             }
         }
     }
@@ -83,11 +84,22 @@ class ViewController: WKTabBarController {
         label.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor).isActive = true
         
         if tabBarItems[index].title == "Add Procedure" && !IS_IPAD() {
-            // present(vc, animated: true, completion: nil)
+            let button = UIButton(type: .system)
+            button.setTitle("Close", for: .normal)
+            button.addTarget(self, action: #selector(didTapCloseButton(_:)), for: .touchUpInside)
+            vc.view.addSubview(button)
+            button.translatesAutoresizingMaskIntoConstraints = false
+            button.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor).isActive = true
+            button.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor, constant: 50).isActive = true
+            present(vc, animated: true, completion: nil)
             return nil
         }
         
         return vc
     }
 
+    func didTapCloseButton(_ sender: AnyObject) {
+        dismiss(animated: true, completion: nil)
+    }
+    
 }
