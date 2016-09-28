@@ -12,7 +12,6 @@
 		3A94D9111D828B890064FE20 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A94D90F1D828B890064FE20 /* Main.storyboard */; };
 		3A94D9131D828B890064FE20 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3A94D9121D828B890064FE20 /* Assets.xcassets */; };
 		3A94D9161D828B890064FE20 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A94D9141D828B890064FE20 /* LaunchScreen.storyboard */; };
-		3A94D9251D828BB90064FE20 /* WKTabBarController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3A94D9241D828BB90064FE20 /* WKTabBarController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3A94D9291D828BB90064FE20 /* WKTabBarController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D9221D828BB90064FE20 /* WKTabBarController.framework */; };
 		3A94D92A1D828BB90064FE20 /* WKTabBarController.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 3A94D9221D828BB90064FE20 /* WKTabBarController.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		3A94D9301D828C020064FE20 /* WKTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A94D92F1D828C020064FE20 /* WKTabBarController.swift */; };
@@ -51,7 +50,6 @@
 		3A94D9151D828B890064FE20 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		3A94D9171D828B890064FE20 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3A94D9221D828BB90064FE20 /* WKTabBarController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = WKTabBarController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		3A94D9241D828BB90064FE20 /* WKTabBarController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WKTabBarController.h; sourceTree = "<group>"; };
 		3A94D9261D828BB90064FE20 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3A94D92F1D828C020064FE20 /* WKTabBarController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WKTabBarController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -110,7 +108,6 @@
 			isa = PBXGroup;
 			children = (
 				3A94D92F1D828C020064FE20 /* WKTabBarController.swift */,
-				3A94D9241D828BB90064FE20 /* WKTabBarController.h */,
 				3A94D9261D828BB90064FE20 /* Info.plist */,
 			);
 			path = WKTabBarController;
@@ -123,7 +120,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				3A94D9251D828BB90064FE20 /* WKTabBarController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

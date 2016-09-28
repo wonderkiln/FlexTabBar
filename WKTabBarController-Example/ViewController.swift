@@ -24,72 +24,49 @@ class ViewController: WKTabBarController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        tabBarBackgroundImage = UIImage(named: "tab_bar_bg")
-    }
-    
-    override func tabBarControllerNumberOfItems(_ controller: WKTabBarController) -> Int {
-        return 5
-    }
-    
-    override func tabBarController(_ controller: WKTabBarController, imageAtIndex index: Int) -> UIImage? {
-        if IS_IPAD() && IS_LANDSCAPE() {
-            if index == 0 { return UIImage(named: "ic_home") }
-            else if index == 1 { return UIImage(named: "ic_activity") }
-            else if index == 2 { return UIImage(named: "ic_review") }
-            else if index == 3 { return UIImage(named: "ic_profile") }
-            else { return UIImage(named: "ic_add") }
+        tabBarBackgroundImage = #imageLiteral(resourceName: "tab_bar_bg")
+        if IS_IPAD() {
+            tabBarItems = [
+                WKTabBarItem(title: "Home", image: #imageLiteral(resourceName: "ic_item"), selected: #imageLiteral(resourceName: "ic_item_sel")),
+                WKTabBarItem(title: "Activity", image: #imageLiteral(resourceName: "ic_item"), selected: #imageLiteral(resourceName: "ic_item_sel")),
+                WKTabBarItem(title: "Review", image: #imageLiteral(resourceName: "ic_item"), selected: #imageLiteral(resourceName: "ic_item_sel")),
+                WKTabBarItem(title: "Profile", image: #imageLiteral(resourceName: "ic_item"), selected: #imageLiteral(resourceName: "ic_item_sel")),
+                WKTabBarItem(title: "Add Procedure", image: #imageLiteral(resourceName: "ic_add")),
+            ]
+            tabBarItems[4].proportion = 1.5
         } else {
-            if index == 0 { return UIImage(named: "ic_home") }
-            else if index == 1 { return UIImage(named: "ic_activity") }
-            else if index == 2 { return UIImage(named: "tab_bar_circle") }
-            else if index == 3 { return UIImage(named: "ic_review") }
-            else { return UIImage(named: "ic_profile") }
+            tabBarItems = [
+                WKTabBarItem(title: "Home", image: #imageLiteral(resourceName: "ic_item"), selected: #imageLiteral(resourceName: "ic_item_sel")),
+                WKTabBarItem(title: "Activity", image: #imageLiteral(resourceName: "ic_item"), selected: #imageLiteral(resourceName: "ic_item_sel")),
+                WKTabBarItem(title: "Add Procedure", image: #imageLiteral(resourceName: "ic_middle")),
+                WKTabBarItem(title: "Review", image: #imageLiteral(resourceName: "ic_item"), selected: #imageLiteral(resourceName: "ic_item_sel")),
+                WKTabBarItem(title: "Profile", image: #imageLiteral(resourceName: "ic_item"), selected: #imageLiteral(resourceName: "ic_item_sel")),
+            ]
+            tabBarItems[2].proportion = 1.5
         }
     }
     
-    override func tabBarController(_ controller: WKTabBarController, selectedImageAtIndex index: Int) -> UIImage? {
-        if IS_IPAD() && IS_LANDSCAPE() {
-            if index == 0 { return UIImage(named: "ic_home_sel") }
-            else if index == 1 { return UIImage(named: "ic_activity_sel") }
-            else if index == 2 { return UIImage(named: "ic_review_sel") }
-            else if index == 3 { return UIImage(named: "ic_profile_sel") }
-            else { return UIImage(named: "ic_add") }
-        } else {
-            if index == 0 { return UIImage(named: "ic_home_sel") }
-            else if index == 1 { return UIImage(named: "ic_activity_sel") }
-            else if index == 2 { return UIImage(named: "tab_bar_circle") }
-            else if index == 3 { return UIImage(named: "ic_review_sel") }
-            else { return UIImage(named: "ic_profile_sel") }
-        }
-    }
-    
-    override func tabBarController(_ controller: WKTabBarController, titleAtIndex index: Int) -> String? {
-        if IS_IPAD() && IS_LANDSCAPE() {
-            if index == 0 { return "Home" }
-            else if index == 1 { return "Activity" }
-            else if index == 2 { return "Review" }
-            else if index == 3 { return "Profile" }
-            else { return "Add Procedure" }
-        }
-        return nil
-    }
-    
-    override func tabBarController(_ controller: WKTabBarController, customizeCell cell: WKTabBarImageCell, atIndex index: Int) {
-        if IS_IPAD() && IS_LANDSCAPE() {
-            if index == 4 {
-                (cell as? WKTabBarImageLabelCell)?.label.textColor = UIColor.white
-                cell.backgroundColor = UIColor(red:68.0/255.0, green:132.0/255.0, blue:166.0/255.0, alpha:255.0/255.0)
+    override func tabBarController(_ controller: WKTabBarController, customizeCell cell: WKBaseTabBarCell, at index: Int) {
+        if IS_IPAD() {
+            cell.textLabel?.font = UIFont.systemFont(ofSize: 16)
+            if cell.model?.title == "Add Procedure" {
+                cell.textLabel?.textColor = UIColor.white
+                cell.backgroundColor = UIColor(red:0.25, green:0.60, blue:0.75, alpha:1.00)
             } else {
-                (cell as? WKTabBarImageLabelCell)?.label.textColor = UIColor(white: 0.2, alpha: 1.0)
+                cell.textLabel?.textColor = UIColor(red:0.63, green:0.68, blue:0.77, alpha:1.00)
                 cell.backgroundColor = UIColor.clear
             }
         } else {
-            if index == 2 {
-                cell.imageView.transform = CGAffineTransform(translationX: 0, y: -15)
+            if cell.model?.title == "Add Procedure" {
+                cell.imageView?.transform = CGAffineTransform(translationX: 0, y: -10)
             } else {
-                cell.imageView.transform = CGAffineTransform.identity
+                cell.imageView?.transform = CGAffineTransform.identity
             }
         }
+    }
+    
+    override func tabBarController(_ controller: WKTabBarController, shouldShowTitleAt index: Int) -> Bool {
+        return (tabBarItems[index].title == "Add Procedure" && IS_IPAD()) || (IS_IPAD() && IS_LANDSCAPE())
     }
     
     override func tabBarController(_ controller: WKTabBarController, viewControllerAtIndex index: Int) -> UIViewController? {
@@ -106,7 +83,23 @@ class ViewController: WKTabBarController {
         label.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor).isActive = true
         label.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor).isActive = true
         
+        if tabBarItems[index].title == "Add Procedure" && !IS_IPAD() {
+            let button = UIButton(type: .system)
+            button.setTitle("Close", for: .normal)
+            button.addTarget(self, action: #selector(didTapCloseButton(_:)), for: .touchUpInside)
+            vc.view.addSubview(button)
+            button.translatesAutoresizingMaskIntoConstraints = false
+            button.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor).isActive = true
+            button.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor, constant: 50).isActive = true
+            present(vc, animated: true, completion: nil)
+            return nil
+        }
+        
         return vc
     }
 
+    func didTapCloseButton(_ sender: AnyObject) {
+        dismiss(animated: true, completion: nil)
+    }
+    
 }

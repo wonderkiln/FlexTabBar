@@ -8,22 +8,62 @@
 
 import UIKit
 
-public protocol WKTabBarControllerProtocol {
+public class WKTabBarItem {
     
-    func tabBarControllerNumberOfItems(_ controller: WKTabBarController) -> Int
-    func tabBarController(_ controller: WKTabBarController, titleAtIndex index: Int) -> String?
-    func tabBarController(_ controller: WKTabBarController, imageAtIndex index: Int) -> UIImage?
-    func tabBarController(_ controller: WKTabBarController, selectedImageAtIndex index: Int) -> UIImage?
-    func tabBarController(_ controller: WKTabBarController, customizeCell cell: WKTabBarImageCell, atIndex index: Int)
-    func tabBarController(_ controller: WKTabBarController, viewControllerAtIndex index: Int) -> UIViewController?
+    public var title: String?
+    public var image: UIImage
+    public var highlightedImage: UIImage?
+    public var selectedImage: UIImage?
+    public var proportion: Double = 1.0
+    
+    public init(image: UIImage, highlighted: UIImage? = nil, selected: UIImage? = nil) {
+        self.image = image
+        self.highlightedImage = highlighted
+        self.selectedImage = selected
+    }
+    
+    public init(title: String, image: UIImage, highlighted: UIImage? = nil, selected: UIImage? = nil) {
+        self.title = title
+        self.image = image
+        self.highlightedImage = highlighted
+        self.selectedImage = selected
+    }
     
 }
 
-open class WKTabBarImageCell: UICollectionViewCell {
+public protocol WKTabBarControllerProtocol {
+    func tabBarController(_ controller: WKTabBarController, shouldShowTitleAt index: Int) -> Bool
+    func tabBarController(_ controller: WKTabBarController, viewControllerAtIndex index: Int) -> UIViewController?
+    func tabBarController(_ controller: WKTabBarController, customizeCell cell: WKBaseTabBarCell, at index: Int)
+}
+
+open class WKBaseTabBarCell: UICollectionViewCell {
     
-    open var tabBar: WKTabBarController!
+    public var model: WKTabBarItem?
     
-    open var imageView: UIImageView!
+    public var imageView: UIImageView?
+    public var textLabel: UILabel?
+    
+    open func commonInit() {
+        //
+    }
+    
+    open func set(highlighted: Bool) {
+        //
+    }
+    
+    open func set(selected: Bool) {
+        //
+    }
+}
+
+open class WKTabBarImageCell: WKBaseTabBarCell {
+    
+    public override var model: WKTabBarItem? {
+        didSet {
+            imageView?.image = model?.image
+        }
+    }
     
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -35,31 +75,51 @@ open class WKTabBarImageCell: UICollectionViewCell {
         commonInit()
     }
     
-    func commonInit() {
-        imageView = UIImageView()
+    open override func set(selected: Bool) {
+        guard let imageView = imageView else { return }
+        
+        UIView.transition(with: imageView,
+                          duration: 0.3,
+                          options: .transitionCrossDissolve,
+                          animations: {
+                            if selected {
+                                imageView.image = self.model?.selectedImage ?? self.model?.image
+                            } else {
+                                imageView.image = self.model?.image
+                            }
+            },
+                          completion: nil)
+    }
+    
+    open override func set(highlighted: Bool) {
+        guard let imageView = imageView else { return }
+        
+        UIView.transition(with: imageView,
+                          duration: 0.3,
+                          options: .transitionCrossDissolve,
+                          animations: {
+                            if highlighted {
+                                imageView.image = self.model?.highlightedImage ?? self.model?.image
+                            } else {
+                                imageView.image = self.model?.image
+                            }
+            },
+                          completion: nil)
+    }
+    
+    open override func commonInit() {
+        let imageView = UIImageView()
         contentView.addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
         imageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
+        
+        self.imageView = imageView
     }
     
     open override var isHighlighted: Bool {
         didSet {
-            if isHighlighted {
-                alpha = 0.5
-            } else {
-                alpha = 1.0
-            }
-        }
-    }
-    
-    open override var isSelected: Bool {
-        didSet {
-            if isSelected {
-                imageView.image = tabBar.tabBarController(tabBar, selectedImageAtIndex: 0)
-            } else {
-                imageView.image = tabBar.tabBarController(tabBar, imageAtIndex: 0)
-            }
+            set(highlighted: isHighlighted)
         }
     }
     
@@ -67,45 +127,51 @@ open class WKTabBarImageCell: UICollectionViewCell {
 
 open class WKTabBarImageLabelCell: WKTabBarImageCell {
     
-    open var label: UILabel!
+    public override var model: WKTabBarItem? {
+        didSet {
+            textLabel?.text = model?.title
+        }
+    }
     
-    override func commonInit() {
+    override open func commonInit() {
         let view = UIView()
         view.backgroundColor = UIColor.clear
         
-        imageView = UIImageView()
+        let imageView = UIImageView()
         view.addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         
-        label = UILabel()
-        label.text = "Label"
-        label.font = UIFont.systemFont(ofSize: 15)
-        view.addSubview(label)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 10).isActive = true
-        label.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
-        label.topAnchor.constraint(equalTo: view.topAnchor, constant: 2).isActive = true
-        label.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
+        let textLabel = UILabel()
+        textLabel.text = "Label"
+        textLabel.font = UIFont.systemFont(ofSize: 15)
+        view.addSubview(textLabel)
+        textLabel.translatesAutoresizingMaskIntoConstraints = false
+        textLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 10).isActive = true
+        textLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        textLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: 2).isActive = true
+        textLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
         
         contentView.addSubview(view)
         view.translatesAutoresizingMaskIntoConstraints = false
         view.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
         view.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
+        
+        self.imageView = imageView
+        self.textLabel = textLabel
     }
     
 }
 
-public enum IndicatorViewType {
-    case line(CGFloat) // height
-    case dot(CGFloat)  // width = height
-}
-
-@IBDesignable
 open class WKTabBarController: UIViewController, WKTabBarControllerProtocol, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     
-    open var tabBarBackgroundImage: UIImage? {
+    var selectedIndex: Int = 0
+    var container: UIView!
+    var collectionView: UICollectionView!
+    weak var viewController: UIViewController?
+    
+    public var tabBarBackgroundImage: UIImage? {
         didSet {
             if let image = tabBarBackgroundImage {
                 collectionView?.backgroundView = UIImageView(image: image)
@@ -113,57 +179,13 @@ open class WKTabBarController: UIViewController, WKTabBarControllerProtocol, UIC
         }
     }
     
-    var indicatorType: IndicatorViewType = .dot(6.0)
-    open var indicatorColor: UIColor = UIColor(red:68.0/255.0, green:132.0/255.0, blue:166.0/255.0, alpha:255.0/255.0)
-    
-    var indicatorSize: CGSize {
-        switch indicatorType {
-        case .line(let height):
-            let count = tabBarControllerNumberOfItems(self)
-            let width = collectionView.frame.width / CGFloat(count)
-            return CGSize(width: width, height: height)
-        case .dot(let size):
-            return CGSize(width: size, height: size)
-        }
-    }
-    
-    open var collectionView: UICollectionView!
-    open var indicatorView: UIView!
-    
-    var viewController: UIViewController?
-    
-    func changeViewController(_ vc: UIViewController) {
-        viewController?.view.removeFromSuperview()
-        viewController?.removeFromParentViewController()
-        
-        view.insertSubview(vc.view, at: 0)
-        vc.view.frame = view.frame
-        addChildViewController(vc)
-        vc.didMove(toParentViewController: self)
-        
-        viewController = vc
-    }
-    
-    var selectedIndex: Int = 0 {
+    public var tabBarItems: [WKTabBarItem] = [] {
         didSet {
-            if let vc = tabBarController(self, viewControllerAtIndex: selectedIndex) {
-                updateIndicatorViewAtIndex(selectedIndex)
-                changeViewController(vc)
-            }
+            collectionView?.reloadData()
         }
     }
-    
-    func updateIndicatorViewAtIndex(_ index: Int) {
-        guard let cell = collectionView.cellForItem(at: IndexPath(row: index, section: 0)) else {
-            return
-        }
-        
-        let origin = CGPoint(x: cell.frame.midX - indicatorSize.width / 2.0, y: view.bounds.height - indicatorSize.height / 2.0)
-        UIView.animate(withDuration: 0.5, animations: {
-            self.indicatorView.frame = CGRect(origin: origin, size: self.indicatorSize)
-            self.indicatorView.layoutIfNeeded()
-        }) 
-    }
+
+    public var tabBarHeight: CGFloat = 48.0
     
     public init() {
         super.init(nibName: nil, bundle: nil)
@@ -180,6 +202,15 @@ open class WKTabBarController: UIViewController, WKTabBarControllerProtocol, UIC
     }
     
     func commonInit() {
+        container = UIView()
+        container.backgroundColor = UIColor.clear
+        view.addSubview(container)
+        container.translatesAutoresizingMaskIntoConstraints = false
+        container.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+        container.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
+        container.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+        container.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -tabBarHeight).isActive = true
+        
         let layout = UICollectionViewFlowLayout()
         layout.minimumInteritemSpacing = 0
         layout.minimumLineSpacing = 0
@@ -188,10 +219,13 @@ open class WKTabBarController: UIViewController, WKTabBarControllerProtocol, UIC
         collectionView = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
         collectionView.clipsToBounds = false
         collectionView.isScrollEnabled = false
+        collectionView.allowsSelection = true
+        collectionView.allowsMultipleSelection = false
+        collectionView.backgroundView = UIImageView(image: tabBarBackgroundImage)
         collectionView.register(WKTabBarImageCell.self,
-                                     forCellWithReuseIdentifier: "WKTabBarImageCell")
+                                forCellWithReuseIdentifier: "WKTabBarImageCell")
         collectionView.register(WKTabBarImageLabelCell.self,
-                                     forCellWithReuseIdentifier: "WKTabBarImageLabelCell")
+                                forCellWithReuseIdentifier: "WKTabBarImageLabelCell")
         collectionView.backgroundColor = UIColor.clear
         collectionView.dataSource = self
         collectionView.delegate = self
@@ -201,95 +235,123 @@ open class WKTabBarController: UIViewController, WKTabBarControllerProtocol, UIC
         collectionView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         collectionView.trailingAnchor.constraint(equalTo: view.trailingAnchor).isActive = true
         collectionView.bottomAnchor.constraint(equalTo: view.bottomAnchor).isActive = true
-        collectionView.heightAnchor.constraint(equalToConstant: 49).isActive = true
+        collectionView.heightAnchor.constraint(equalToConstant: tabBarHeight).isActive = true
         
-        indicatorView = UIView()
-        indicatorView.backgroundColor = indicatorColor
-        indicatorView.layer.cornerRadius = indicatorSize.height / 2.0
-        indicatorView.clipsToBounds = true
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(didChangeOrientation(_:)),
+            name: NSNotification.Name.UIApplicationDidChangeStatusBarOrientation,
+            object: nil)
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    open override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         
-        view.addSubview(indicatorView)
-        indicatorView.translatesAutoresizingMaskIntoConstraints = true
+        if let vc = tabBarController(self, viewControllerAtIndex: 0) {
+            changeViewController(vc)
+        }
         
-        selectedIndex = 0
+        collectionView.performBatchUpdates({
+            let indexPath = IndexPath(index: 0)
+            self.collectionView.selectItem(at: indexPath, animated: false, scrollPosition: .centeredHorizontally)
+        })
     }
     
     // MARK: WKTabBarControllerProtocol
-    
     open func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return tabBarControllerNumberOfItems(self)
+        return tabBarItems.count
     }
     
     open func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell: WKTabBarImageCell
+        let cell: WKBaseTabBarCell
+        let item = tabBarItems[indexPath.row]
         
-        if let text = tabBarController(self, titleAtIndex: (indexPath as NSIndexPath).row) {
-            let textCell = collectionView.dequeueReusableCell(withReuseIdentifier: "WKTabBarImageLabelCell", for: indexPath) as! WKTabBarImageLabelCell
-            
-            textCell.imageView.image = tabBarController(self, imageAtIndex: (indexPath as NSIndexPath).row)
-            textCell.label.text = text
-            
-            cell = textCell
+        if tabBarController(self, shouldShowTitleAt: indexPath.row) {
+            cell = collectionView.dequeueReusableCell(withReuseIdentifier: "WKTabBarImageLabelCell",
+                                                      for: indexPath) as! WKTabBarImageLabelCell
         } else {
-            let textCell = collectionView.dequeueReusableCell(withReuseIdentifier: "WKTabBarImageCell", for: indexPath) as! WKTabBarImageCell
-            
-            textCell.imageView.image = tabBarController(self, imageAtIndex: (indexPath as NSIndexPath).row)
-            
-            cell = textCell
+            cell = collectionView.dequeueReusableCell(withReuseIdentifier: "WKTabBarImageCell",
+                                                      for: indexPath) as! WKTabBarImageCell
         }
         
-        cell.tabBar = self
-        tabBarController(self, customizeCell: cell, atIndex: (indexPath as NSIndexPath).row)
+        cell.model = item
+        tabBarController(self, customizeCell: cell, at: indexPath.row)
+        cell.set(selected: indexPath.row == selectedIndex)
         
         return cell
     }
     
     open func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let count = self.collectionView(collectionView, numberOfItemsInSection: (indexPath as NSIndexPath).section)
-        return CGSize(width: collectionView.bounds.width / CGFloat(count), height: collectionView.bounds.height)
+        let proportion = tabBarItems[indexPath.row].proportion
+        let sum = tabBarItems.reduce(0.0) { $0.0 + $0.1.proportion }
+        return CGSize(width: collectionView.bounds.width * CGFloat(proportion / sum), height: collectionView.bounds.height)
     }
     
-    open func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-//        collectionView.deselectItemAtIndexPath(indexPath, animated: true)
-        
-//        if let cell = collectionView.cellForItemAtIndexPath(indexPath) as? WKTabBarImageCell {
-//            cell.imageView.image = tabBarController(self, selectedImageAtIndex: indexPath.row)
-//            cell.imageView.setNeedsDisplay()
-//        }
-        
-        selectedIndex = (indexPath as NSIndexPath).row
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let lastIndexPath = IndexPath(row: selectedIndex, section: 0)
+        if let cell = collectionView.cellForItem(at: lastIndexPath) as? WKBaseTabBarCell {
+            cell.set(selected: false)
+        }
+        if let vc = tabBarController(self, viewControllerAtIndex: indexPath.row) {
+            selectedIndex = indexPath.row
+            changeViewController(vc)
+            
+            if let cell = collectionView.cellForItem(at: indexPath) as? WKBaseTabBarCell {
+                cell.set(selected: true)
+            }
+        }
     }
     
-    open override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
+    public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
+        if let cell = collectionView.cellForItem(at: indexPath) as? WKBaseTabBarCell {
+            cell.set(selected: false)
+        }
+    }
+    
+    // MARK: - Private Methods
+    func changeViewController(_ vc: UIViewController) {
+        viewController?.view.removeFromSuperview()
+        viewController?.removeFromParentViewController()
+        
+        container.addSubview(vc.view)
+        vc.view.frame = container.bounds
+        addChildViewController(vc)
+        vc.didMove(toParentViewController: self)
+        
+        viewController = vc
+    }
+    
+    public func setSelectedTabIndex(_ index: Int) {
+        if let vc = tabBarController(self, viewControllerAtIndex: index) {
+            let indexPath = IndexPath(index: index)
+            collectionView.selectItem(at: indexPath,
+                                      animated: false,
+                                      scrollPosition: .centeredHorizontally)
+            
+            selectedIndex = indexPath.row
+            changeViewController(vc)
+        }
+    }
+    
+    func didChangeOrientation(_ notification: Notification) {
         collectionView.reloadData()
-        updateIndicatorViewAtIndex(selectedIndex)
     }
     
     // MARK: WKTabBarControllerProtocol
-    
-    open func tabBarControllerNumberOfItems(_ controller: WKTabBarController) -> Int {
-        return 0
-    }
-    
-    open func tabBarController(_ controller: WKTabBarController, titleAtIndex index: Int) -> String? {
-        return nil
-    }
-    
-    open func tabBarController(_ controller: WKTabBarController, selectedImageAtIndex index: Int) -> UIImage? {
-        return nil
-    }
-    
-    open func tabBarController(_ controller: WKTabBarController, imageAtIndex index: Int) -> UIImage? {
-        return nil
-    }
-    
-    open func tabBarController(_ controller: WKTabBarController, customizeCell cell: WKTabBarImageCell, atIndex index: Int) {
-        //
+    open func tabBarController(_ controller: WKTabBarController, shouldShowTitleAt index: Int) -> Bool {
+        return false
     }
     
     open func tabBarController(_ controller: WKTabBarController, viewControllerAtIndex index: Int) -> UIViewController? {
         return nil
+    }
+    
+    open func tabBarController(_ controller: WKTabBarController, customizeCell cell: WKBaseTabBarCell, at index: Int) {
+        //
     }
     
 }
