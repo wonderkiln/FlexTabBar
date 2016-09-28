@@ -125,15 +125,12 @@ open class WKTabBarController: UIViewController, WKTabBarControllerProtocol, UIC
     }
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        guard let vc = tabBarController(self, viewControllerAtIndex: indexPath.row) else { return }
-        
         let lastIndexPath = IndexPath(row: selectedIndex, section: 0)
         if let cell = collectionView.cellForItem(at: lastIndexPath) as? WKBaseTabBarCell {
             cell.set(selected: false)
         }
         
         selectedIndex = indexPath.row
-        changeViewController(vc)
         
         if let cell = collectionView.cellForItem(at: indexPath) as? WKBaseTabBarCell {
             cell.set(selected: true)
@@ -141,7 +138,9 @@ open class WKTabBarController: UIViewController, WKTabBarControllerProtocol, UIC
     }
     
     public func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
-        return tabBarController(self, viewControllerAtIndex: indexPath.row) != nil
+        guard let vc = tabBarController(self, viewControllerAtIndex: indexPath.row) else { return false }
+        changeViewController(vc)
+        return true
     }
     
     public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath) {
@@ -161,18 +160,6 @@ open class WKTabBarController: UIViewController, WKTabBarControllerProtocol, UIC
         vc.didMove(toParentViewController: self)
         
         viewController = vc
-    }
-    
-    public func setSelectedTabIndex(_ index: Int) {
-        if let vc = tabBarController(self, viewControllerAtIndex: index) {
-            let indexPath = IndexPath(index: index)
-            collectionView.selectItem(at: indexPath,
-                                      animated: false,
-                                      scrollPosition: .centeredHorizontally)
-            
-            selectedIndex = indexPath.row
-            changeViewController(vc)
-        }
     }
     
     func didChangeOrientation(_ notification: Notification) {
