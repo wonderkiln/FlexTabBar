@@ -1,0 +1,73 @@
+//
+//  Created by Adrian Mateoaea on 28/09/2016.
+//  Copyright © 2016 Wonderkiln. All rights reserved.
+//
+
+import UIKit
+
+open class WKTabBarImageCell: WKBaseTabBarCell {
+    
+    public override var model: WKTabBarItem? {
+        didSet {
+            imageView?.image = model?.image
+        }
+    }
+    
+    override public init(frame: CGRect) {
+        super.init(frame: frame)
+        commonInit()
+    }
+    
+    required public init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        commonInit()
+    }
+    
+    open override func set(selected: Bool) {
+        guard let imageView = imageView else { return }
+        
+        UIView.transition(with: imageView,
+                          duration: 0.3,
+                          options: .transitionCrossDissolve,
+                          animations: {
+                            if selected {
+                                imageView.image = self.model?.selectedImage ?? self.model?.image
+                            } else {
+                                imageView.image = self.model?.image
+                            }
+            },
+                          completion: nil)
+    }
+    
+    open override func set(highlighted: Bool) {
+        guard let imageView = imageView else { return }
+        
+        UIView.transition(with: imageView,
+                          duration: 0.3,
+                          options: .transitionCrossDissolve,
+                          animations: {
+                            if highlighted {
+                                imageView.image = self.model?.highlightedImage ?? self.model?.image
+                            } else {
+                                imageView.image = self.model?.image
+                            }
+            },
+                          completion: nil)
+    }
+    
+    open override func commonInit() {
+        let imageView = UIImageView()
+        contentView.addSubview(imageView)
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        imageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
+        imageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
+        
+        self.imageView = imageView
+    }
+    
+    open override var isHighlighted: Bool {
+        didSet {
+            set(highlighted: isHighlighted)
+        }
+    }
+}

@@ -7,6 +7,11 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A5FD9181D9BD5160061CC9C /* WKTabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5FD9171D9BD5160061CC9C /* WKTabBarItem.swift */; };
+		3A5FD91A1D9BD5270061CC9C /* WKTabBarControllerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5FD9191D9BD5270061CC9C /* WKTabBarControllerProtocol.swift */; };
+		3A5FD91C1D9BD5380061CC9C /* WKBaseTabBarCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5FD91B1D9BD5380061CC9C /* WKBaseTabBarCell.swift */; };
+		3A5FD91E1D9BD5500061CC9C /* WKTabBarImageCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5FD91D1D9BD5500061CC9C /* WKTabBarImageCell.swift */; };
+		3A5FD9201D9BD5630061CC9C /* WKTabBarImageLabelCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5FD91F1D9BD5630061CC9C /* WKTabBarImageLabelCell.swift */; };
 		3A94D90C1D828B890064FE20 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A94D90B1D828B890064FE20 /* AppDelegate.swift */; };
 		3A94D90E1D828B890064FE20 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A94D90D1D828B890064FE20 /* ViewController.swift */; };
 		3A94D9111D828B890064FE20 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3A94D90F1D828B890064FE20 /* Main.storyboard */; };
@@ -42,6 +47,11 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3A5FD9171D9BD5160061CC9C /* WKTabBarItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WKTabBarItem.swift; sourceTree = "<group>"; };
+		3A5FD9191D9BD5270061CC9C /* WKTabBarControllerProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WKTabBarControllerProtocol.swift; sourceTree = "<group>"; };
+		3A5FD91B1D9BD5380061CC9C /* WKBaseTabBarCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WKBaseTabBarCell.swift; sourceTree = "<group>"; };
+		3A5FD91D1D9BD5500061CC9C /* WKTabBarImageCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WKTabBarImageCell.swift; sourceTree = "<group>"; };
+		3A5FD91F1D9BD5630061CC9C /* WKTabBarImageLabelCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WKTabBarImageLabelCell.swift; sourceTree = "<group>"; };
 		3A94D9081D828B890064FE20 /* WKTabBarController-Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "WKTabBarController-Example.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A94D90B1D828B890064FE20 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3A94D90D1D828B890064FE20 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -107,7 +117,12 @@
 		3A94D9231D828BB90064FE20 /* WKTabBarController */ = {
 			isa = PBXGroup;
 			children = (
+				3A5FD91B1D9BD5380061CC9C /* WKBaseTabBarCell.swift */,
 				3A94D92F1D828C020064FE20 /* WKTabBarController.swift */,
+				3A5FD9191D9BD5270061CC9C /* WKTabBarControllerProtocol.swift */,
+				3A5FD91D1D9BD5500061CC9C /* WKTabBarImageCell.swift */,
+				3A5FD91F1D9BD5630061CC9C /* WKTabBarImageLabelCell.swift */,
+				3A5FD9171D9BD5160061CC9C /* WKTabBarItem.swift */,
 				3A94D9261D828BB90064FE20 /* Info.plist */,
 			);
 			path = WKTabBarController;
@@ -236,7 +251,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A5FD9181D9BD5160061CC9C /* WKTabBarItem.swift in Sources */,
+				3A5FD91A1D9BD5270061CC9C /* WKTabBarControllerProtocol.swift in Sources */,
+				3A5FD91C1D9BD5380061CC9C /* WKBaseTabBarCell.swift in Sources */,
 				3A94D9301D828C020064FE20 /* WKTabBarController.swift in Sources */,
+				3A5FD9201D9BD5630061CC9C /* WKTabBarImageLabelCell.swift in Sources */,
+				3A5FD91E1D9BD5500061CC9C /* WKTabBarImageCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
