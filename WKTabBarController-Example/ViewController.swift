@@ -19,10 +19,51 @@ public func IS_IPHONE() -> Bool {
     return UIDevice.current.userInterfaceIdiom == .phone
 }
 
+final class WKCustomTabBarImageLabelCell: WKTabBarImageLabelCell {
+    
+    var isAddButton: Bool = false
+    
+    open override func set(model: WKTabBarItem) {
+        super.set(model: model)
+        
+        if isAddButton {
+            textLabel?.textColor = UIColor.white
+            backgroundColor = UIColor(red:0.25, green:0.60, blue:0.75, alpha:1.00)
+        } else {
+            textLabel?.textColor = UIColor(red:0.63, green:0.68, blue:0.77, alpha:1.00)
+            backgroundColor = UIColor.clear
+        }
+    }
+    
+    override func set(selected: Bool) {
+        super.set(selected: selected)
+        
+        if selected {
+            if !isAddButton {
+                textLabel?.textColor = UIColor(red:0.25, green:0.60, blue:0.75, alpha:1.00)
+            }
+            textLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        } else {
+            if !isAddButton {
+                textLabel?.textColor = UIColor(red:0.63, green:0.68, blue:0.77, alpha:1.00)
+            }
+            textLabel?.font = UIFont.systemFont(ofSize: 16)
+        }
+    }
+    
+}
+
+let WKTabBarCellNameCustomImageLabel = "WKTabBarCellNameCustomImageLabel"
+
 class ViewController: WKTabBarController {
 
+    var addButtonIndex: Int = 2
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        register(cell: WKCustomTabBarImageLabelCell.self,
+                 withName: WKTabBarCellNameCustomImageLabel)
         
         tabBarBackgroundImage = #imageLiteral(resourceName: "tab_bar_bg")
         if IS_IPAD() {
@@ -34,6 +75,7 @@ class ViewController: WKTabBarController {
                 WKTabBarItem(title: "Add Procedure", image: #imageLiteral(resourceName: "ic_add")),
             ]
             tabBarItems[4].proportion = 1.5
+            addButtonIndex = 4
         } else {
             tabBarItems = [
                 WKTabBarItem(title: "Home", image: #imageLiteral(resourceName: "ic_item"), selected: #imageLiteral(resourceName: "ic_item_sel")),
@@ -43,30 +85,22 @@ class ViewController: WKTabBarController {
                 WKTabBarItem(title: "Profile", image: #imageLiteral(resourceName: "ic_item"), selected: #imageLiteral(resourceName: "ic_item_sel")),
             ]
             tabBarItems[2].proportion = 1.5
+            addButtonIndex = 2
         }
     }
     
-    override func tabBarController(_ controller: WKTabBarController, customizeCell cell: WKBaseTabBarCell, at index: Int) {
+    override func tabBarController(_ controller: WKTabBarController, customize cell: WKBaseTabBarCell, with item: WKTabBarItem, at index: Int) {
         if IS_IPAD() {
-            cell.textLabel?.font = UIFont.systemFont(ofSize: 16)
-            if cell.model?.title == "Add Procedure" {
-                cell.textLabel?.textColor = UIColor.white
-                cell.backgroundColor = UIColor(red:0.25, green:0.60, blue:0.75, alpha:1.00)
-            } else {
-                cell.textLabel?.textColor = UIColor(red:0.63, green:0.68, blue:0.77, alpha:1.00)
-                cell.backgroundColor = UIColor.clear
+            if let cell = cell as? WKCustomTabBarImageLabelCell {
+                cell.isAddButton = index == addButtonIndex
             }
         } else {
-            if cell.model?.title == "Add Procedure" {
+            if index == addButtonIndex {
                 cell.imageView?.transform = CGAffineTransform(translationX: 0, y: -10)
             } else {
                 cell.imageView?.transform = CGAffineTransform.identity
             }
         }
-    }
-    
-    override func tabBarController(_ controller: WKTabBarController, shouldShowTitleAt index: Int) -> Bool {
-        return (tabBarItems[index].title == "Add Procedure" && IS_IPAD()) || (IS_IPAD() && IS_LANDSCAPE())
     }
     
     override func tabBarController(_ controller: WKTabBarController, viewControllerAtIndex index: Int) -> UIViewController? {
@@ -83,7 +117,7 @@ class ViewController: WKTabBarController {
         label.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor).isActive = true
         label.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor).isActive = true
         
-        if tabBarItems[index].title == "Add Procedure" && !IS_IPAD() {
+        if index == addButtonIndex && !IS_IPAD() {
             let button = UIButton(type: .system)
             button.setTitle("Close", for: .normal)
             button.addTarget(self, action: #selector(didTapCloseButton(_:)), for: .touchUpInside)
@@ -96,6 +130,14 @@ class ViewController: WKTabBarController {
         }
         
         return vc
+    }
+    
+    override func tabBarController(_ controller: WKTabBarController, cellNameAtIndex index: Int) -> WKTabBarCellName {
+        if (index == addButtonIndex && IS_IPAD()) || (IS_IPAD() && IS_LANDSCAPE()) {
+            return WKTabBarCellNameCustomImageLabel
+        } else {
+            return WKTabBarCellNameImage
+        }
     }
 
     func didTapCloseButton(_ sender: AnyObject) {

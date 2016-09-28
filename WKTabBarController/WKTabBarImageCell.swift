@@ -7,11 +7,7 @@ import UIKit
 
 open class WKTabBarImageCell: WKBaseTabBarCell {
     
-    public override var model: WKTabBarItem? {
-        didSet {
-            imageView?.image = model?.image
-        }
-    }
+    var model: WKTabBarItem?
     
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -21,6 +17,12 @@ open class WKTabBarImageCell: WKBaseTabBarCell {
     required public init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         commonInit()
+    }
+    
+    open override func set(model: WKTabBarItem) {
+        super.set(model: model)
+        self.model = model
+        imageView?.image = model.image
     }
     
     open override func set(selected: Bool) {

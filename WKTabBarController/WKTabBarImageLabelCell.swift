@@ -7,10 +7,9 @@ import UIKit
 
 open class WKTabBarImageLabelCell: WKTabBarImageCell {
     
-    public override var model: WKTabBarItem? {
-        didSet {
-            textLabel?.text = model?.title
-        }
+    open override func set(model: WKTabBarItem) {
+        super.set(model: model)
+        textLabel?.text = model.title
     }
     
     override open func commonInit() {

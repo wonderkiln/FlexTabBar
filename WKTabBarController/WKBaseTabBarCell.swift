@@ -7,10 +7,12 @@ import UIKit
 
 open class WKBaseTabBarCell: UICollectionViewCell {
     
-    public var model: WKTabBarItem?
-    
     public var imageView: UIImageView?
     public var textLabel: UILabel?
+    
+    open func set(model: WKTabBarItem) {
+        //
+    }
     
     open func commonInit() {
         //
