@@ -22,9 +22,15 @@ open class WKTabBarImageLabelCell: WKTabBarImageCell {
         imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
         imageView.centerYAnchor.constraint(equalTo: view.centerYAnchor).isActive = true
         
+        widthAnchorConstraint = imageView.widthAnchor.constraint(equalToConstant: imageSize)
+        heightAnchorConstraint = imageView.heightAnchor.constraint(equalToConstant: imageSize)
+        
+        widthAnchorConstraint.isActive = true
+        heightAnchorConstraint.isActive = true
+        
         let textLabel = UILabel()
         textLabel.text = "Label"
-        textLabel.font = UIFont.systemFont(ofSize: 15)
+        textLabel.font = UIFont.systemFont(ofSize: 16)
         view.addSubview(textLabel)
         textLabel.translatesAutoresizingMaskIntoConstraints = false
         textLabel.leadingAnchor.constraint(equalTo: imageView.trailingAnchor, constant: 10).isActive = true

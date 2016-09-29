@@ -7,6 +7,8 @@ import UIKit
 
 open class WKBaseTabBarCell: UICollectionViewCell {
     
+    open var imageSize: CGFloat = 22.0
+    
     public var imageView: UIImageView?
     public var textLabel: UILabel?
     

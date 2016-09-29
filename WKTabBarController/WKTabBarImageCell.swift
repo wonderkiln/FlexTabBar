@@ -7,6 +7,16 @@ import UIKit
 
 open class WKTabBarImageCell: WKBaseTabBarCell {
     
+    var widthAnchorConstraint: NSLayoutConstraint!
+    var heightAnchorConstraint: NSLayoutConstraint!
+    
+    open override var imageSize: CGFloat {
+        didSet {
+            widthAnchorConstraint?.constant = imageSize
+            heightAnchorConstraint?.constant = imageSize
+        }
+    }
+    
     var model: WKTabBarItem?
     
     override public init(frame: CGRect) {
@@ -59,10 +69,17 @@ open class WKTabBarImageCell: WKBaseTabBarCell {
     
     open override func commonInit() {
         let imageView = UIImageView()
+        imageView.contentMode = .scaleAspectFit
         contentView.addSubview(imageView)
         imageView.translatesAutoresizingMaskIntoConstraints = false
         imageView.centerXAnchor.constraint(equalTo: contentView.centerXAnchor).isActive = true
         imageView.centerYAnchor.constraint(equalTo: contentView.centerYAnchor).isActive = true
+        
+        widthAnchorConstraint = imageView.widthAnchor.constraint(equalToConstant: imageSize)
+        heightAnchorConstraint = imageView.heightAnchor.constraint(equalToConstant: imageSize)
+        
+        widthAnchorConstraint.isActive = true
+        heightAnchorConstraint.isActive = true
         
         self.imageView = imageView
     }
