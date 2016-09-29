@@ -11,6 +11,4 @@ Pod::Spec.new do |s|
 
   s.source = { :git => "https://github.com/wonderkiln/open-tab-bar.git", :branch => "master", :tag => "#{s.version}" }
   s.source_files = "WKTabBarController/**/*.swift"
-
-  s.dependency "SnapKit", "~> 3.0"
 end
