@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = "WKTabBarController"
-  s.version = "0.5.0"
+  s.version = "1.0.0"
   s.summary = "WKTabBarController"
   s.homepage = "https://github.com/wonderkiln/open-tab-bar"
   s.license = { :type => "MIT", :file => "LICENSE" }
