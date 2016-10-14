@@ -99,6 +99,17 @@ open class WKTabBarController: UIViewController, WKTabBarControllerProtocol, UIC
     public func register(cell: AnyClass, withName name: String) {
         collectionView.register(cell, forCellWithReuseIdentifier: name)
     }
+
+    public func changeSelectedIndex(_ index: Int) {
+        guard let vc = tabBarController(self, viewControllerAtIndex: index) else {
+            return
+        }
+        
+        changeViewController(vc)
+        
+        selectedIndex = index
+        collectionView.reloadData()
+    }
     
     // MARK: WKTabBarControllerProtocol
     open func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
