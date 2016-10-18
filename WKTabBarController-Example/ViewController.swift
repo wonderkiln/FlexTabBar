@@ -96,8 +96,10 @@ class ViewController: WKTabBarController {
             }
         } else {
             if index == addButtonIndex {
-                cell.imageView?.transform = CGAffineTransform(translationX: 0, y: -10)
+                cell.imageSize = 72.0
+                cell.imageView?.transform = CGAffineTransform(translationX: 0, y: -5)
             } else {
+                cell.imageSize = 22.0
                 cell.imageView?.transform = CGAffineTransform.identity
             }
         }
