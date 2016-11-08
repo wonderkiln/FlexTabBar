@@ -1,22 +1,21 @@
 ![Flexible Tab Bar Header](.repo/flexible-tab-bar-header.png)
 
-# open-tab-bar
-Name non-final is a custom approach to the tab bar that allows you to create different views for different *orientations*/*devices* or *states*. iOS default `UITabBar` is limited and it is really hard to customize it for different device states.
+Flexible Tab Bar is a custom approach to the tab bar that allows you to create different views for different *orientations*/*devices* or *states*. iOS default `UITabBar` is limited and it is really hard to customize it for different device states.
 
-#### Here are some screenshots for iPhone:
+## Preview
 - Portrait (with a different type of button in the middle and different presentation when tapped)
   <br>![](Images/iphone_p.png)
 - Landscape (same tab layout as for the portrait one)
   <br>![](Images/iphone_l.png)
 
-#### And for iPad:
+## And for iPad:
 - Portrait (the middle button is now placed at the end and has the same presentation style as the rest of the tab pages)
   <br>![](Images/ipad_p.png)
 - Landscape (same tab layout as for the portrait one but now it displays the tab item title since it has more space to expand)
   <br>![](Images/ipad_l.png)
 
 
-### Adding to your project
+## Adding to your project
 
 To add open-tab-bar via [CocoaPods](http://cocoapods.org/) into your project just create a `Podfile` and add this line:
 ```ruby
@@ -24,7 +23,7 @@ pod 'open-tab-bar'
 ```
 Install the pod by running `pod install`
 
-### Usage
+## Usage
 
 #### 1. Extending the controller
 First extend your view controller from `WKTabBarController`:
@@ -88,3 +87,8 @@ func tabBarController(_ controller: WKTabBarController, cellNameAtIndex index: I
   return "CustomTabBarItem"
 }
 ```
+
+## Credits
+Adrian Mateoaea
+
+## License
