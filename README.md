@@ -1,3 +1,5 @@
+![Flexible Tab Bar Header](.repo/flexible-tab-bar-header.png)
+
 # open-tab-bar
 Name non-final is a custom approach to the tab bar that allows you to create different views for different *orientations*/*devices* or *states*. iOS default `UITabBar` is limited and it is really hard to customize it for different device states.
 
