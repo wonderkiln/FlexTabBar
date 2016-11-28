@@ -89,6 +89,6 @@ func tabBarController(_ controller: WKTabBarController, cellNameAtIndex index: I
 ```
 
 ## Credits
-Adrian Mateoaea
+[Adrian Mateoaea](https://github.com/adrianitech)
 
 ## License
