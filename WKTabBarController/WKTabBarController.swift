@@ -62,7 +62,7 @@ open class WKTabBarController: UIViewController, WKTabBarControllerProtocol, UIC
         commonInit()
     }
     
-    func commonInit() {
+    open func commonInit() {
         container = UIView()
         container.backgroundColor = UIColor.clear
         view.addSubview(container)

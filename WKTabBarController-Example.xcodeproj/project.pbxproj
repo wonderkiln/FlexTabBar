@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A3363301E48981700711F39 /* FlexTabBar.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 3A33632F1E48981700711F39 /* FlexTabBar.podspec */; };
 		3A5FD9181D9BD5160061CC9C /* WKTabBarItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5FD9171D9BD5160061CC9C /* WKTabBarItem.swift */; };
 		3A5FD91A1D9BD5270061CC9C /* WKTabBarControllerProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5FD9191D9BD5270061CC9C /* WKTabBarControllerProtocol.swift */; };
 		3A5FD91C1D9BD5380061CC9C /* WKBaseTabBarCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3A5FD91B1D9BD5380061CC9C /* WKBaseTabBarCell.swift */; };
@@ -47,6 +48,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		3A33632F1E48981700711F39 /* FlexTabBar.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = FlexTabBar.podspec; sourceTree = SOURCE_ROOT; };
 		3A5FD9171D9BD5160061CC9C /* WKTabBarItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WKTabBarItem.swift; sourceTree = "<group>"; };
 		3A5FD9191D9BD5270061CC9C /* WKTabBarControllerProtocol.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WKTabBarControllerProtocol.swift; sourceTree = "<group>"; };
 		3A5FD91B1D9BD5380061CC9C /* WKBaseTabBarCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WKBaseTabBarCell.swift; sourceTree = "<group>"; };
@@ -117,6 +119,7 @@
 		3A94D9231D828BB90064FE20 /* WKTabBarController */ = {
 			isa = PBXGroup;
 			children = (
+				3A33632F1E48981700711F39 /* FlexTabBar.podspec */,
 				3A5FD91B1D9BD5380061CC9C /* WKBaseTabBarCell.swift */,
 				3A94D92F1D828C020064FE20 /* WKTabBarController.swift */,
 				3A5FD9191D9BD5270061CC9C /* WKTabBarControllerProtocol.swift */,
@@ -232,6 +235,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A3363301E48981700711F39 /* FlexTabBar.podspec in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

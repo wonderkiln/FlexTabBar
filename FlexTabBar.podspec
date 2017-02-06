@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name = "FlexTabBar"
-  s.version = "1.0.2"
+  s.version = "1.1.0"
   s.summary = "Flexible Tab Bar for Swift"
   s.homepage = "https://github.com/wonderkiln/FlexTabBar"
   s.license = { :type => "MIT", :file => "LICENSE" }
